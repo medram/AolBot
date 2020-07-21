@@ -18,7 +18,6 @@ class Inbox_archive_all(ActionAbstract):
 		driver = self.isp.driver
 		profile = self.isp.profile
 
-		# print('Start ActionChains...')
 		# Go to Inbox section
 		driver.get('https://mail.aol.com/')
 
