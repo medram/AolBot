@@ -77,7 +77,7 @@ def main():
 				# traceback.print_exception(exc_type, exc_value, exc_tb)
 				logger.exception('Exception occured')
 
-		logger.debug(f'{len(profiles_list)} emails have been processed in ({common.prettify_seconds(time.time() - start)})')
+		logger.debug(f'{len(profiles_list)} emails have been processed within ({common.prettify_seconds(time.time() - start)})')
 	except KeyboardInterrupt:
 		logger.info('Stopped')
 
