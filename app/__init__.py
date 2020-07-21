@@ -22,7 +22,7 @@ from app.common import Actions
 from app.actions import (
 		Spam_report_all_to_inbox,
 		Inbox_archive_all,
-		# Inbox_open_messages,
+		Inbox_open_messages,
 		# Spam_open_messages,
 		# Inbox_open_plus_click_messages
 	)
@@ -138,7 +138,7 @@ class Aol(AbstractISP):
 available_actions = [
 	(Actions.SPAM_REPORT_ALL_TO_INBOX, Spam_report_all_to_inbox),
 	(Actions.INBOX_ARCHIVE_ALL, Inbox_archive_all),
-	# (Actions.INBOX_OPEN_MESSAGES, Inbox_open_messages),
+	(Actions.INBOX_OPEN_MESSAGES, Inbox_open_messages),
 	# (Actions.SPAM_OPEN_MESSAGES, Spam_open_messages),
 	# (Actions.INBOX_OPEN_PLUS_CLICK_MESSAGES, Inbox_open_plus_click_messages),
 ]

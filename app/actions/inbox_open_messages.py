@@ -20,57 +20,64 @@ class Inbox_open_messages(ActionAbstract):
 		driver = self.isp.driver
 		profile = self.isp.profile
 
-		# print('Start ActionChains...')
 		# Go to Inbox section
-		driver.get('https://mail.yahoo.com/d/folders/1')
+		driver.get('https://mail.aol.com/')
 
 		# let javascript requests finish.
 		time.sleep(5)
 
-		# Scroll down.
-		with utils.scroll_down(driver, 'div[data-test-id=virtual-list]', ignored_exceptions=(JavascriptException,)):
-			time.sleep(2)
+		# select navbar items.
+		navbar = driver.find_elements_by_css_selector('div.navItem')
+		# click on Spam section
+		navbar[1].click()
+		time.sleep(2)
 
-			total_messages = self.isp.get_total_messages()
+		total_messages = self.isp.get_total_messages()
 
-			if not isinstance(total_messages, int):
-				# set a default value or exit.
-				total_messages = 0
+		if not isinstance(total_messages, int):
+			# set a default value or exit.
+			total_messages = 0
 
-			actions = ActionChains(driver)
-			# Archive all messages.
-			try:
-				# scroll top to open the first message.
-				with utils.scroll_up(driver, 'div[data-test-id=virtual-list]', ignored_exceptions=(JavascriptException,)):
-					messages = driver.find_elements_by_css_selector('a[data-test-id=message-list-item]')
-					messages[0].click()
+		actions = ActionChains(driver)
+		# Archive all messages.
+		try:
+			# clicking the first messages.
+			driver.execute_script("""
+				let messages_row = document.querySelectorAll("div.dojoxGrid-content div.dojoxGrid-row")
+				messages_row[0].classList.add("dojoxGrid-row-over")
+			""")
+			ActionChains(driver).send_keys(Keys.ENTER).perform()
 
-					# get the amount of messages to open.
-					last_message = common.get_amount_of_message(total_messages)
-					click.secho(f'({profile.email}) Total messages {total_messages}: {last_message} messages will be openned.', fg='bright_black')
+			# get the amount of messages to open.
+			last_message = common.get_amount_of_message(total_messages)
+			click.secho(f'({profile.email}) Total messages {total_messages}: {last_message} messages will be openned.', fg='bright_black')
 
-					with click.progressbar(length=last_message, label=f'Openning messages ({profile.email})...', show_pos=True) as bar:
-						for i in range(last_message):
-							actions = ActionChains(driver)
-							actions.send_keys(Keys.ARROW_RIGHT)
-							# add start to the current message.
-							if random.random() <= app_settings.MESSAGES_STARTS_RATIO:
-								actions.send_keys('l')
-							actions.perform()
+			with click.progressbar(length=last_message, label=f'Openning messages ({profile.email})...', show_pos=True) as bar:
+				for i in range(last_message):
+					actions = ActionChains(driver)
+					actions.send_keys('n')
+					# add start to the current message.
+					if random.random() <= app_settings.MESSAGES_STARTS_RATIO:
+						try:
+							button_flag = driver.find_element_by_css_selector('span.flag')
+							button_flag.click()
+						except Exception:
+							logger.warning('Cannot add Flags to messages, it may need a fix!')
+					actions.perform()
 
-							# show the progress
-							# print(f'\r{i+1}/{last_message}', end='')
-							bar.update(1) # +=1 each time
+					# show the progress
+					# print(f'\r{i+1}/{last_message}', end='')
+					bar.update(1) # +=1 each time
 
-							# clear the all chained actions (is not working, it's a bug in selenium source code).
-							# actions.reset_actions()
+					# clear the all chained actions (is not working, it's a bug in selenium source code).
+					# actions.reset_actions()
 
-							time.sleep(random.uniform(3, 5))
+					time.sleep(random.uniform(3, 5))
 
 
-			except TimeoutException:
-				logger.warning(f'({self.ACTION.name}) {profile.email:.<40} [WARNING]')
-			except Exception as e:
-				logger.exception(f'[{self.ACTION.name}] {profile.email:.<40} [Error]')
-			else:
-				logger.info(f'({self.ACTION.name}) {profile.email:.<40} [DONE]')
+		except TimeoutException:
+			logger.warning(f'({self.ACTION.name}) {profile.email}')
+		except Exception as e:
+			logger.exception(f'({self.ACTION.name}) {profile.email}')
+		else:
+			logger.info(f'({self.ACTION.name}) {profile.email:.<40} [DONE]')
