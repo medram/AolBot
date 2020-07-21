@@ -41,46 +41,49 @@ class Inbox_open_plus_click_messages(ActionAbstract):
 		actions = ActionChains(driver)
 		# Archive all messages.
 		try:
-			# clicking the first messages.
-			driver.execute_script("""
-				let messages_row = document.querySelectorAll("div.dojoxGrid-content div.dojoxGrid-row")
-				messages_row[0].classList.add("dojoxGrid-row-over")
-			""")
-			ActionChains(driver).send_keys(Keys.ENTER).perform()
+			if total_messages == 0:
+				logger.warning(f'({self.ACTION.name}) Maybe no messages are found in spam section of ({profile.email})')
+			else:
+				# clicking the first messages.
+				driver.execute_script("""
+					let messages_row = document.querySelectorAll("div.dojoxGrid-content div.dojoxGrid-row")
+					messages_row[0].classList.add("dojoxGrid-row-over")
+				""")
+				ActionChains(driver).send_keys(Keys.ENTER).perform()
 
-			# get the amount of messages to open.
-			last_message = common.get_amount_of_message(total_messages)
-			click.secho(f'({profile.email}) Total messages {total_messages}: {last_message} messages will be openned.', fg='bright_black')
+				# get the amount of messages to open.
+				last_message = common.get_amount_of_message(total_messages)
+				click.secho(f'({profile.email}) Total messages {total_messages}: {last_message} messages will be openned.', fg='bright_black')
 
-			with click.progressbar(length=last_message, label=f'Openning messages ({profile.email})...', show_pos=True) as bar:
-				for i in range(last_message):
-					actions = ActionChains(driver)
-					actions.send_keys('n')
-					# add start to the current message.
-					if random.random() <= app_settings.MESSAGES_STARTS_RATIO:
-						try:
-							button_flag = driver.find_element_by_css_selector('span.flag')
-							button_flag.click()
-						except Exception:
-							logger.warning('Cannot add Flags to messages, it may need a fix!')
+				with click.progressbar(length=last_message, label=f'Openning messages ({profile.email})...', show_pos=True) as bar:
+					for i in range(last_message):
+						actions = ActionChains(driver)
+						actions.send_keys('n')
+						# add start to the current message.
+						if random.random() <= app_settings.MESSAGES_STARTS_RATIO:
+							try:
+								button_flag = driver.find_element_by_css_selector('span.flag')
+								button_flag.click()
+							except Exception:
+								logger.warning('Cannot add Flags to messages, it may need a fix!')
 
-					if random.random() <= app_settings.MESSAGES_CLICK_RATIO:
-						images_in_messages = driver.find_elements_by_css_selector('div[data-dojo-attach-point=bodyCont] a img')
-						if images_in_messages:
-							# try:
-							image_to_click = images_in_messages[0]
-							ActionChains(driver).key_down(Keys.CONTROL).click(image_to_click).key_up(Keys.CONTROL).perform()
+						if random.random() <= app_settings.MESSAGES_CLICK_RATIO:
+							images_in_messages = driver.find_elements_by_css_selector('div[data-dojo-attach-point=bodyCont] a img')
+							if images_in_messages:
+								# try:
+								image_to_click = images_in_messages[0]
+								ActionChains(driver).key_down(Keys.CONTROL).click(image_to_click).key_up(Keys.CONTROL).perform()
 
-					actions.perform()
+						actions.perform()
 
-					# show the progress
-					# print(f'\r{i+1}/{last_message}', end='')
-					bar.update(1) # +=1 each time
+						# show the progress
+						# print(f'\r{i+1}/{last_message}', end='')
+						bar.update(1) # +=1 each time
 
-					# clear the all chained actions (is not working, it's a bug in selenium source code).
-					# actions.reset_actions()
+						# clear the all chained actions (is not working, it's a bug in selenium source code).
+						# actions.reset_actions()
 
-					time.sleep(random.uniform(3, 5))
+						time.sleep(random.uniform(3, 5))
 
 
 		except TimeoutException:
