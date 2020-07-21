@@ -1,0 +1,7 @@
+click==7.1.2
+colorama==0.4.3
+colorlog==4.1.0
+humanfriendly==8.2
+pyreadline==2.1
+selenium==3.141.0
+urllib3==1.25.9
