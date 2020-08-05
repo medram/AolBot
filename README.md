@@ -29,7 +29,7 @@ account4@aol.com,passw0rd4,147.25.14.195:6666
 And save your your file, then double click "run.bat" file.
 this console window should be prompted
 
-![](https://raw.githubusercontent.com/medram/AolBot/master/wiki/imgs/1.png?token=AF235OIWCDWQQ4YWZ7VYONS7FMWWK)
+![](https://raw.githubusercontent.com/medram/AolBot/master/wiki/imgs/1.png)
 
 ### Performing Actions step:
 You could perform one or multiple actions at once,
