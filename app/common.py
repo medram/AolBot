@@ -103,7 +103,7 @@ def show_introduction():
 |                                                                            |
 |    {app_settings.APP_NAME} v{app_settings.APP_VERSION}                      Developed By: {app_settings.DEVELOPED_BY}      |
 |                                                                            |
-|    Powred By: Omega Capital.          Contact: {app_settings.CONTACT_ME}   |
+|                                       Contact: {app_settings.CONTACT_ME}   |
 |                                                                            |
 +----------------------------------------------------------------------------+
 

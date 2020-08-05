@@ -36,7 +36,7 @@ APP_NAME = 'AolBot'
 
 APP_VERSION = '1.0.0'
 
-POWRED_BY = 'Omega Capital'
+POWRED_BY = ''
 
 DEVELOPED_BY = 'Mohammed Ramouchy'
 
